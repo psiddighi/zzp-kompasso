@@ -86,7 +86,7 @@ const StressSignaalPage = () => {
                   <h4 className="font-semibold text-red-700">Financiële Indicatoren</h4>
                   <ul className="text-gray-600 text-sm mt-2 space-y-1">
                     <li>• Geen facturen betaald afgelopen maand</li>
-                    <li>• Hoge vaste lasten (>80% inkomen)</li>
+                    <li>• Hoge vaste lasten (&gt;80% inkomen)</li>
                     <li>• Aflopende opdrachten zonder vervanging</li>
                     <li>• Langdurige betalingsachterstanden</li>
                   </ul>

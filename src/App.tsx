@@ -7,10 +7,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
-import KompasPage from "./pages/KompasPage";
-import BudgetBuddyPage from "./pages/BudgetBuddyPage";
-import StressSignaalPage from "./pages/StressSignaalPage";
-import VergelijkingPage from "./pages/VergelijkingPage";
+import ScanPage from "./pages/ScanPage";
+import ResultPage from "./pages/ResultPage";
+import InfoPage from "./pages/InfoPage";
+import HelpPage from "./pages/HelpPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,10 +26,10 @@ const App = () => (
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/kompas" element={<KompasPage />} />
-              <Route path="/budgetbuddy" element={<BudgetBuddyPage />} />
-              <Route path="/stresssignaal" element={<StressSignaalPage />} />
-              <Route path="/vergelijking" element={<VergelijkingPage />} />
+              <Route path="/scan" element={<ScanPage />} />
+              <Route path="/resultaat" element={<ResultPage />} />
+              <Route path="/info" element={<InfoPage />} />
+              <Route path="/hulp" element={<HelpPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>

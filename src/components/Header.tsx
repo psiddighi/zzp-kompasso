@@ -11,22 +11,19 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <Link to="/" className="text-2xl font-bold text-blue-600">
-            ZZP Oplossingen
+            🧭 ZZP Kompas
           </Link>
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
-            <Link to="/kompas" className="text-gray-700 hover:text-blue-600 transition-colors">
-              ZZP Kompas
+            <Link to="/scan" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+              Start Scan
             </Link>
-            <Link to="/budgetbuddy" className="text-gray-700 hover:text-blue-600 transition-colors">
-              BudgetBuddy
+            <Link to="/info" className="text-gray-700 hover:text-blue-600 transition-colors">
+              Hoe werkt het?
             </Link>
-            <Link to="/stresssignaal" className="text-gray-700 hover:text-blue-600 transition-colors">
-              StressSignaal
-            </Link>
-            <Link to="/vergelijking" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Vergelijking
+            <Link to="/hulp" className="text-gray-700 hover:text-blue-600 transition-colors">
+              Hulp vinden
             </Link>
           </nav>
 
@@ -44,32 +41,25 @@ const Header = () => {
           <nav className="md:hidden mt-4 pb-4 border-t pt-4">
             <div className="flex flex-col space-y-4">
               <Link 
-                to="/kompas" 
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                to="/scan" 
+                className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                ZZP Kompas
+                Start Scan
               </Link>
               <Link 
-                to="/budgetbuddy" 
+                to="/info" 
                 className="text-gray-700 hover:text-blue-600 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                BudgetBuddy
+                Hoe werkt het?
               </Link>
               <Link 
-                to="/stresssignaal" 
+                to="/hulp" 
                 className="text-gray-700 hover:text-blue-600 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                StressSignaal
-              </Link>
-              <Link 
-                to="/vergelijking" 
-                className="text-gray-700 hover:text-blue-600 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Vergelijking
+                Hulp vinden
               </Link>
             </div>
           </nav>

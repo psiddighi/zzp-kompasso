@@ -25,6 +25,9 @@ const Header = () => {
             <Link to="/hulp" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
               Hulp vinden
             </Link>
+            <Link to="/live-event" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+              Live Event
+            </Link>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -60,6 +63,13 @@ const Header = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Hulp vinden
+              </Link>
+              <Link 
+                to="/live-event" 
+                className="text-gray-700 hover:text-blue-600 transition-colors font-medium px-4 py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Live Event
               </Link>
             </div>
           </nav>

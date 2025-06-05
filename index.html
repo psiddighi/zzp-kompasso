@@ -16,9 +16,272 @@
     <meta name="twitter:site" content="@lovable_dev" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
     <script type="module" src="/src/main.tsx"></script>
+    <style>
+      .chatbot-container {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 1000;
+      }
+      
+      .chatbot-button {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background-color: #2563eb;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        transition: background-color 0.3s;
+      }
+      
+      .chatbot-button:hover {
+        background-color: #1d4ed8;
+      }
+      
+      .chatbot-popup {
+        position: absolute;
+        bottom: 70px;
+        right: 0;
+        width: 320px;
+        height: 400px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border: 2px solid #93c5fd;
+        display: none;
+        flex-direction: column;
+      }
+      
+      .chatbot-popup.open {
+        display: flex;
+      }
+      
+      .chatbot-header {
+        background-color: #2563eb;
+        color: white;
+        padding: 16px;
+        border-radius: 10px 10px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .chatbot-messages {
+        flex: 1;
+        padding: 16px;
+        overflow-y: auto;
+        background-color: #f9fafb;
+      }
+      
+      .chatbot-input-area {
+        padding: 12px;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        gap: 8px;
+      }
+      
+      .chatbot-input {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        outline: none;
+      }
+      
+      .chatbot-send {
+        padding: 8px 12px;
+        background-color: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      
+      .message {
+        margin-bottom: 12px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        max-width: 80%;
+      }
+      
+      .message.user {
+        background-color: #2563eb;
+        color: white;
+        margin-left: auto;
+      }
+      
+      .message.bot {
+        background-color: #e5e7eb;
+        color: #374151;
+      }
+      
+      .close-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 4px;
+      }
+    </style>
   </head>
 
   <body>
     <div id="root"></div>
+    <div class="chatbot-container" id="fallback-chatbot">
+      <button class="chatbot-button" onclick="toggleChatbot()">
+        💬
+      </button>
+      
+      <div class="chatbot-popup" id="chatbot-popup">
+        <div class="chatbot-header">
+          <div>
+            <span>💬</span>
+            <span style="margin-left: 8px;">ZZP Kompas Assistent</span>
+          </div>
+          <button class="close-btn" onclick="toggleChatbot()">✕</button>
+        </div>
+        
+        <div class="chatbot-messages" id="chatbot-messages">
+          <div class="message bot">
+            Hallo! Ik ben de ZZP Kompas assistent. Hoe kan ik je vandaag helpen?
+          </div>
+        </div>
+        
+        <div class="chatbot-input-area">
+          <input 
+            type="text" 
+            class="chatbot-input" 
+            id="chatbot-input" 
+            placeholder="Typ je vraag..."
+            onkeypress="handleKeyPress(event)"
+          />
+          <button class="chatbot-send" onclick="sendMessage()">
+            ➤
+          </button>
+        </div>
+      </div>
+      <script>
+      // Chatbot functionaliteit
+      let isOpen = false;
+      
+      const botResponses = {
+        default: [
+          "Ik kan je helpen met vragen over je financiële situatie als ZZP'er.",
+          "Wil je meer weten over verzekeringen, belastingen of buffers?",
+          "Je kunt ook de financiële scan starten om meer inzicht te krijgen in je situatie."
+        ],
+        verzekering: [
+          "Als ZZP'er is een arbeidsongeschiktheidsverzekering (AOV) belangrijk om je inkomen te beschermen bij ziekte.",
+          "Er zijn verschillende soorten verzekeringen voor ZZP'ers, zoals aansprakelijkheidsverzekering en rechtsbijstandverzekering.",
+          "Wist je dat sommige brancheverenigingen collectieve verzekeringen aanbieden met korting?"
+        ],
+        belasting: [
+          "Vergeet niet om 21% btw en ongeveer 30% inkomstenbelasting apart te zetten van je inkomsten.",
+          "Als ZZP'er kun je veel zakelijke kosten aftrekken, zoals je werkruimte, apparatuur en reiskosten.",
+          "De zelfstandigenaftrek is in 2024 €5.030. Dit bedrag wordt de komende jaren afgebouwd."
+        ],
+        buffer: [
+          "Experts raden aan om minimaal 3-6 maanden aan vaste lasten als buffer te hebben.",
+          "Een financiële buffer beschermt je tegen periodes zonder opdrachten of onverwachte uitgaven.",
+          "Begin klein: zet elke maand een vast bedrag opzij om je buffer op te bouwen."
+        ],
+        pensioen: [
+          "Als ZZP'er moet je zelf je pensioen regelen. Je kunt hiervoor sparen via banksparen of beleggen.",
+          "De jaarruimte geeft aan hoeveel je fiscaal voordelig kunt inleggen voor je pensioen.",
+          "Overweeg om een deel van je winst te reserveren voor later via een pensioenrekening."
+        ],
+        scan: [
+          "De financiële scan duurt slechts 5 minuten en geeft je direct inzicht in je situatie.",
+          "Na de scan krijg je persoonlijke tips en adviezen om je financiële gezondheid te verbeteren.",
+          "Je kunt de scan starten door naar de 'Scan' pagina te gaan in het hoofdmenu."
+        ]
+      };
+      
+      function toggleChatbot() {
+        isOpen = !isOpen;
+        const popup = document.getElementById('chatbot-popup');
+        if (isOpen) {
+          popup.classList.add('open');
+        } else {
+          popup.classList.remove('open');
+        }
+      }
+      
+      function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+          sendMessage();
+        }
+      }
+      
+      function sendMessage() {
+        const input = document.getElementById('chatbot-input');
+        const message = input.value.trim();
+        
+        if (!message) return;
+        
+        // Voeg gebruikersbericht toe
+        addMessage(message, true);
+        input.value = '';
+        
+        // Simuleer bot antwoord na korte vertraging
+        setTimeout(() => {
+          const botResponse = generateBotResponse(message);
+          addMessage(botResponse, false);
+        }, 1000);
+      }
+      
+      function addMessage(text, isUser) {
+        const messagesContainer = document.getElementById('chatbot-messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+        messageDiv.textContent = text;
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+      
+      function generateBotResponse(userInput) {
+        const lowerInput = userInput.toLowerCase();
+        
+        if (lowerInput.includes('verzekering') || lowerInput.includes('aov')) {
+          return getRandomResponse('verzekering');
+        } else if (lowerInput.includes('belasting') || lowerInput.includes('btw') || lowerInput.includes('aftrek')) {
+          return getRandomResponse('belasting');
+        } else if (lowerInput.includes('buffer') || lowerInput.includes('sparen') || lowerInput.includes('reserve')) {
+          return getRandomResponse('buffer');
+        } else if (lowerInput.includes('pensioen') || lowerInput.includes('oudedagsreserve')) {
+          return getRandomResponse('pensioen');
+        } else if (lowerInput.includes('scan') || lowerInput.includes('test')) {
+          return getRandomResponse('scan');
+        } else {
+          return getRandomResponse('default');
+        }
+      }
+      
+      function getRandomResponse(category) {
+        const responses = botResponses[category] || botResponses.default;
+        return responses[Math.floor(Math.random() * responses.length)];
+      }
+      
+      // Verberg fallback chatbot als React geladen is
+      window.addEventListener('load', function() {
+        setTimeout(() => {
+          const reactRoot = document.getElementById('root');
+          if (reactRoot && reactRoot.children.length > 0) {
+            const fallbackChatbot = document.getElementById('fallback-chatbot');
+            if (fallbackChatbot) {
+              fallbackChatbot.style.display = 'none';
+            }
+          }
+        }, 1000);
+      });
+    </script>
+        <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

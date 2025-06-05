@@ -13,33 +13,36 @@ import InfoPage from "./pages/InfoPage";
 import HelpPage from "./pages/HelpPage";
 import NotFound from "./pages/NotFound";
 import LiveEventPage from "./pages/LiveEventPage";
-
+import { ChatBot } from "./components/ChatBot"
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <div className="min-h-screen flex flex-col">
-          <Header />
-          <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/scan" element={<ScanPage />} />
-              <Route path="/resultaat" element={<ResultPage />} />
-              <Route path="/info" element={<InfoPage />} />
-              <Route path="/hulp" element={<HelpPage />} />
-              <Route path="/live-event" element={<LiveEventPage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            <main className="flex-grow">
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/scan" element={<ScanPage />} />
+                <Route path="/resultaat" element={<ResultPage />} />
+                <Route path="/info" element={<InfoPage />} />
+                <Route path="/hulp" element={<HelpPage />} />
+                <Route path="/live-event" element={<LiveEventPage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+        </BrowserRouter>
+        <ChatBot />
+      </TooltipProvider>
+    </QueryClientProvider>
+  )
+}
 
-export default App;
+export default App
